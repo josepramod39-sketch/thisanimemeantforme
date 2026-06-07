@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { YOUTUBE_CLIPS } from '../../data/youtubeClips'
+import type { ClipRecord } from '../../lib/types'
 import { youtubeWatchUrl } from '../../lib/video'
+import { useClips } from '../../hooks/useClips'
 import { useYouTubePlayer } from '../../hooks/useYouTubePlayer'
 import PillButton from '../PillButton'
 import {
@@ -10,10 +11,10 @@ import {
 } from '../icons'
 import styles from './ClipTheater.module.css'
 
-const randomIndex = (exclude = -1) => {
-  if (YOUTUBE_CLIPS.length <= 1) return 0
+const randomIndex = (len: number, exclude = -1) => {
+  if (len <= 1) return 0
   let i = exclude
-  while (i === exclude) i = Math.floor(Math.random() * YOUTUBE_CLIPS.length)
+  while (i === exclude) i = Math.floor(Math.random() * len)
   return i
 }
 
@@ -25,14 +26,21 @@ function fmt(t: number): string {
 }
 
 export default function ClipTheater() {
+  const clips = useClips()
+  // Mount the player only once clips are available (avoids an empty video id).
+  if (clips.length === 0) return null
+  return <Theater clips={clips} />
+}
+
+function Theater({ clips }: { clips: ClipRecord[] }) {
   const reduce = useReducedMotion()
-  const [index, setIndex] = useState(() => randomIndex())
+  const [index, setIndex] = useState(() => randomIndex(clips.length))
   const [flashKey, setFlashKey] = useState(0)
   const screenRef = useRef<HTMLDivElement | null>(null)
   const trackRef = useRef<HTMLDivElement | null>(null)
   const draggingRef = useRef(false)
 
-  const clip = YOUTUBE_CLIPS[index]
+  const clip = clips[index] ?? clips[0]
   const nextRef = useRef<() => void>(() => {})
 
   const player = useYouTubePlayer(clip.id, {
@@ -43,12 +51,12 @@ export default function ClipTheater() {
 
   const next = useCallback(() => {
     setIndex((cur) => {
-      const n = randomIndex(cur)
-      load(YOUTUBE_CLIPS[n].id)
+      const n = randomIndex(clips.length, cur)
+      load(clips[n].id)
       return n
     })
     setFlashKey((k) => k + 1)
-  }, [load])
+  }, [load, clips])
   useEffect(() => { nextRef.current = next }, [next])
 
   const seekFromEvent = (clientX: number) => {
@@ -67,6 +75,7 @@ export default function ClipTheater() {
   }
 
   const progress = duration ? (current / duration) * 100 : 0
+  const channelHref = clip.channelUrl ?? youtubeWatchUrl(clip.id)
 
   return (
     <section className={styles.theater}>
@@ -76,7 +85,7 @@ export default function ClipTheater() {
             <div className={styles.bezelTop}>
               <span className={styles.lamp} />
               <span className={styles.kind}>{clip.kind === 'amv' ? 'AMV' : 'Official'}</span>
-              <a className={styles.handle} href={clip.channelUrl} target="_blank" rel="noreferrer">
+              <a className={styles.handle} href={channelHref} target="_blank" rel="noreferrer">
                 {clip.channel} · YouTube <ExternalIcon />
               </a>
             </div>
@@ -149,7 +158,7 @@ export default function ClipTheater() {
 
           <p className={styles.caption}>{clip.title}</p>
           <p className={styles.credit}>
-            by <a href={clip.channelUrl} target="_blank" rel="noreferrer">{clip.channel}</a>
+            by <a href={channelHref} target="_blank" rel="noreferrer">{clip.channel}</a>
             {' · '}
             <a href={youtubeWatchUrl(clip.id)} target="_blank" rel="noreferrer">Watch on YouTube</a>
           </p>

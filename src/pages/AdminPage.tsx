@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import type { Mood, SiteSettings, Story } from '../lib/types'
+import type { ClipRecord, Mood, SiteSettings, Story } from '../lib/types'
 import {
   fetchStories, adminDeleteStory, listMoods, upsertMood, deleteMood, updateSettings,
+  adminListClips, addClip, updateClip, deleteClip, fetchYtMeta, extractYouTubeId,
 } from '../lib/db'
 import { invalidateMoods } from '../hooks/useMoods'
+import { invalidateClips } from '../hooks/useClips'
 import { useSession } from '../context/session'
 import { useSettings } from '../context/settings'
 import { timeAgo } from '../lib/format'
@@ -96,6 +98,7 @@ function Dashboard({ email, signOut }: { email: string | null; signOut: () => Pr
       </header>
 
       <SettingsSection />
+      <ClipsSection />
       <MoodsSection />
       <StoriesSection />
     </div>
@@ -145,6 +148,126 @@ function SettingsSection() {
       <div className={styles.row}>
         <PillButton onClick={save}>Save changes</PillButton>
         {status && <span className={styles.status}>{status}</span>}
+      </div>
+    </section>
+  )
+}
+
+/* ---------------- Clip theater ---------------- */
+const ytThumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`
+
+function ClipsSection() {
+  const [clips, setClips] = useState<ClipRecord[]>([])
+  const [url, setUrl] = useState('')
+  const [draft, setDraft] = useState<ClipRecord | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  const load = async () => { invalidateClips(); setClips(await adminListClips()) }
+
+  useEffect(() => {
+    let active = true
+    ;(async () => {
+      try { const c = await adminListClips(); if (active) setClips(c) } catch { /* ignore */ }
+    })()
+    return () => { active = false }
+  }, [])
+
+  const getInfo = async () => {
+    setErr(null)
+    const id = extractYouTubeId(url)
+    if (!id) { setErr('Paste a valid YouTube link or 11-char video id.'); return }
+    setBusy(true)
+    try {
+      const meta = await fetchYtMeta(url)
+      setDraft({ id, kind: 'official', title: meta.title, channel: meta.channel,
+        channelUrl: meta.channelUrl, thumbnail: meta.thumbnail || ytThumb(id), sort: 999, enabled: true })
+    } catch {
+      setDraft({ id, kind: 'official', title: '', channel: '',
+        channelUrl: `https://www.youtube.com/watch?v=${id}`, thumbnail: ytThumb(id), sort: 999, enabled: true })
+      setErr('Could not auto-fetch info — fill it in manually below.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const add = async () => {
+    if (!draft) return
+    if (!draft.title.trim() || !draft.channel.trim()) { setErr('Title and channel are required.'); return }
+    setBusy(true); setErr(null)
+    try {
+      await addClip(draft)
+      setDraft(null); setUrl('')
+      await load()
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Could not add clip.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const toggle = async (c: ClipRecord) => {
+    setClips((cs) => cs.map((x) => (x.id === c.id ? { ...x, enabled: !x.enabled } : x)))
+    try { await updateClip(c.id, { enabled: !c.enabled }); invalidateClips() } catch { await load() }
+  }
+
+  const remove = async (c: ClipRecord) => {
+    if (!window.confirm(`Remove "${c.title}" from the theater?`)) return
+    setClips((cs) => cs.filter((x) => x.id !== c.id))
+    try { await deleteClip(c.id); invalidateClips() } catch { await load() }
+  }
+
+  const enabledCount = clips.filter((c) => c.enabled).length
+
+  return (
+    <section className={styles.section}>
+      <h2 className={styles.h2}>Clip theater</h2>
+      <p className={styles.help}>
+        YouTube videos that shuffle in the “watch something wonderful” section. {enabledCount} of {clips.length} active.
+      </p>
+
+      <div className={styles.addClip}>
+        <input className={styles.input} placeholder="Paste a YouTube link…"
+          value={url} onChange={(e) => setUrl(e.target.value)} />
+        <PillButton variant="outline" onClick={getInfo} disabled={busy || !url.trim()}>
+          {busy ? '…' : 'Get info'}
+        </PillButton>
+      </div>
+
+      {draft && (
+        <div className={styles.draft}>
+          {draft.thumbnail && <img className={styles.draftThumb} src={draft.thumbnail} alt="" />}
+          <div className={styles.draftFields}>
+            <input className={styles.inputSm} placeholder="Title"
+              value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
+            <input className={styles.inputSm} placeholder="Channel (credit)"
+              value={draft.channel} onChange={(e) => setDraft({ ...draft, channel: e.target.value })} />
+            <select className={styles.select} value={draft.kind}
+              onChange={(e) => setDraft({ ...draft, kind: e.target.value })}>
+              <option value="official">Official</option>
+              <option value="amv">AMV</option>
+            </select>
+            <PillButton onClick={add} disabled={busy}>Add to theater</PillButton>
+          </div>
+        </div>
+      )}
+      {err && <p className={styles.err}>{err}</p>}
+
+      <div className={styles.clipList}>
+        {clips.map((c) => (
+          <div key={c.id} className={`${styles.clipRow} ${c.enabled ? '' : styles.clipOff}`}>
+            {c.thumbnail && <img className={styles.clipThumb} src={c.thumbnail} alt="" />}
+            <div className={styles.clipMeta}>
+              <span className={styles.clipTitle}>{c.title}</span>
+              <span className={styles.clipSub}>{c.channel} · {c.kind === 'amv' ? 'AMV' : 'Official'}</span>
+            </div>
+            <label className={styles.switch}>
+              <input type="checkbox" checked={c.enabled} onChange={() => toggle(c)} />
+              {c.enabled ? 'On' : 'Off'}
+            </label>
+            <button className={styles.del} onClick={() => remove(c)}>Delete</button>
+          </div>
+        ))}
       </div>
     </section>
   )

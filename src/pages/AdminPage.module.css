@@ -89,6 +89,37 @@
 .x:hover { background: var(--magenta); color: #fff; }
 .addMood { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
+/* Clips */
+.addClip { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
+.draft {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 12px; border: 1px solid var(--line); border-radius: 14px;
+  background: var(--surface-2); margin-bottom: 14px;
+}
+.draftThumb { width: 120px; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; flex: 0 0 auto; }
+.draftFields { flex: 1; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.select {
+  padding: 9px 12px; border: 1.5px solid var(--line); border-radius: 12px;
+  background: var(--surface); font-family: var(--font-sans); font-size: 0.9rem; color: var(--text);
+}
+.clipList { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; max-height: 460px; overflow-y: auto; }
+.clipRow {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px; border: 1px solid var(--line); border-radius: 12px;
+}
+.clipOff { opacity: 0.5; }
+.clipThumb { width: 84px; aspect-ratio: 16/9; object-fit: cover; border-radius: 6px; flex: 0 0 auto; }
+.clipMeta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.clipTitle {
+  font-weight: 600; font-size: 0.9rem; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.clipSub { font-size: 0.78rem; color: var(--text-muted); }
+.switch {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.8rem; font-weight: 600; color: var(--text-muted); cursor: pointer; flex: 0 0 auto;
+}
+
 /* Stories */
 .stories { display: flex; flex-direction: column; gap: 12px; }
 .storyRow {

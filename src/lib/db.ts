@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import type { Story, Mood, SiteSettings } from './types'
+import type { Story, Mood, SiteSettings, ClipRecord } from './types'
 import type { StoryDraft } from '../components/AddStoryModal'
 
 interface FeedRow {
@@ -191,6 +191,96 @@ export async function updateSettings(s: SiteSettings): Promise<void> {
 export async function adminDeleteStory(id: string): Promise<void> {
   const { error } = await supabase.from('stories').delete().eq('id', id)
   if (error) throw new Error(error.message)
+}
+
+// --- Clip theater (YouTube clips) ---------------------------------------
+interface ClipRow {
+  youtube_id: string
+  kind: string
+  title: string
+  channel: string
+  channel_url: string | null
+  thumbnail: string | null
+  sort: number
+  enabled: boolean
+}
+
+function rowToClip(r: ClipRow): ClipRecord {
+  return {
+    id: r.youtube_id,
+    kind: r.kind,
+    title: r.title,
+    channel: r.channel,
+    channelUrl: r.channel_url,
+    thumbnail: r.thumbnail,
+    sort: r.sort,
+    enabled: r.enabled,
+  }
+}
+
+/** Public: only enabled clips, in order (used by the theater). */
+export async function listClips(): Promise<ClipRecord[]> {
+  const { data, error } = await supabase
+    .from('clips')
+    .select('*')
+    .order('sort', { ascending: true })
+  if (error) throw new Error(error.message)
+  return (data as ClipRow[]).map(rowToClip)
+}
+
+/** Admin: every clip including disabled ones. */
+export async function adminListClips(): Promise<ClipRecord[]> {
+  return listClips() // admin RLS returns all rows through the same query
+}
+
+export async function addClip(c: Omit<ClipRecord, 'sort'> & { sort?: number }): Promise<void> {
+  const { error } = await supabase.from('clips').insert({
+    youtube_id: c.id,
+    kind: c.kind,
+    title: c.title,
+    channel: c.channel,
+    channel_url: c.channelUrl,
+    thumbnail: c.thumbnail,
+    enabled: c.enabled,
+    sort: c.sort ?? 999,
+  })
+  if (error) throw new Error(error.message)
+}
+
+export async function updateClip(id: string, patch: Partial<ClipRecord>): Promise<void> {
+  const row: Record<string, unknown> = {}
+  if (patch.kind !== undefined) row.kind = patch.kind
+  if (patch.title !== undefined) row.title = patch.title
+  if (patch.channel !== undefined) row.channel = patch.channel
+  if (patch.channelUrl !== undefined) row.channel_url = patch.channelUrl
+  if (patch.thumbnail !== undefined) row.thumbnail = patch.thumbnail
+  if (patch.sort !== undefined) row.sort = patch.sort
+  if (patch.enabled !== undefined) row.enabled = patch.enabled
+  const { error } = await supabase.from('clips').update(row).eq('youtube_id', id)
+  if (error) throw new Error(error.message)
+}
+
+export async function deleteClip(id: string): Promise<void> {
+  const { error } = await supabase.from('clips').delete().eq('youtube_id', id)
+  if (error) throw new Error(error.message)
+}
+
+/** Auto-fill clip metadata from a YouTube URL/ID via the oEmbed edge function. */
+export async function fetchYtMeta(
+  url: string,
+): Promise<{ title: string; channel: string; channelUrl: string; thumbnail: string }> {
+  const { data, error } = await supabase.functions.invoke('yt-oembed', { body: { url } })
+  if (error) throw new Error(error.message)
+  if (!data || data.error) throw new Error(data?.error || 'Could not fetch video info.')
+  return data
+}
+
+/** Pull the 11-char video id out of a YouTube URL (or accept a bare id). */
+export function extractYouTubeId(input: string): string | null {
+  const s = input.trim()
+  if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s
+  const m = s.match(/(?:v=|\/embed\/|youtu\.be\/|\/shorts\/)([A-Za-z0-9_-]{11})/)
+  return m ? m[1] : null
 }
 
 export async function setLike(storyId: string, userId: string, liked: boolean): Promise<void> {

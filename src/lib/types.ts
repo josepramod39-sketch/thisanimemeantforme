@@ -40,6 +40,17 @@ export interface SiteSettings {
   heroPrompt: string;
 }
 
+export interface ClipRecord {
+  id: string; // youtube video id
+  kind: string; // 'official' | 'amv' | custom
+  title: string;
+  channel: string;
+  channelUrl: string | null;
+  thumbnail: string | null;
+  sort: number;
+  enabled: boolean;
+}
+
 export interface AiringEntry {
   id: number;
   anime: AnimeRef;
