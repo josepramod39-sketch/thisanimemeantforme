@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { AnimeRef } from '../lib/types'
 import { hueFromString, initials } from '../lib/format'
+import { useMoods } from '../hooks/useMoods'
 import Modal from './Modal'
 import AnimeSearch from './AnimeSearch'
 import PillButton from './PillButton'
@@ -10,6 +11,7 @@ import styles from './AddStoryModal.module.css'
 export interface StoryDraft {
   anime: AnimeRef
   body: string
+  mood: string | null
 }
 
 interface AddStoryModalProps {
@@ -21,14 +23,17 @@ interface AddStoryModalProps {
 const MAX = 600
 
 export default function AddStoryModal({ open, onClose, onSubmit }: AddStoryModalProps) {
+  const moods = useMoods()
   const [anime, setAnime] = useState<AnimeRef | null>(null)
   const [body, setBody] = useState('')
+  const [mood, setMood] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const reset = () => {
     setAnime(null)
     setBody('')
+    setMood(null)
     setSubmitting(false)
     setError(null)
   }
@@ -43,7 +48,7 @@ export default function AddStoryModal({ open, onClose, onSubmit }: AddStoryModal
     setSubmitting(true)
     setError(null)
     try {
-      await onSubmit({ anime, body: body.trim() })
+      await onSubmit({ anime, body: body.trim(), mood })
       reset()
       onClose()
     } catch (e) {
@@ -101,6 +106,25 @@ export default function AddStoryModal({ open, onClose, onSubmit }: AddStoryModal
               onChange={(e) => setBody(e.target.value)}
               autoFocus
             />
+
+            {moods.length > 0 && (
+              <div className={styles.moods}>
+                <span className={styles.moodsLabel}>Watch this when you feel… <em>(optional)</em></span>
+                <div className={styles.moodChips}>
+                  {moods.map((m) => (
+                    <button
+                      key={m.slug}
+                      type="button"
+                      className={`${styles.moodChip} ${mood === m.slug ? styles.moodOn : ''}`}
+                      onClick={() => setMood(mood === m.slug ? null : m.slug)}
+                    >
+                      {m.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className={styles.footer}>
               <span className={styles.count}>{body.length}/{MAX}</span>
               <PillButton onClick={submit} disabled={body.trim().length === 0 || submitting}>

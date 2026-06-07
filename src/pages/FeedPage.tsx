@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import type { AnimeRef } from '../lib/types'
 import { useStories } from '../context/stories'
 import { useUI } from '../context/ui'
+import { useMoods } from '../hooks/useMoods'
 import Hero from '../components/Hero'
 import MasonryGrid from '../components/MasonryGrid'
 import PillButton from '../components/PillButton'
@@ -12,10 +13,14 @@ import styles from './FeedPage.module.css'
 export default function FeedPage() {
   const { stories, loading, error, reload, toggleLike } = useStories()
   const { openAddStory } = useUI()
+  const moods = useMoods()
   const feedRef = useRef<HTMLDivElement>(null)
   const [trailer, setTrailer] = useState<AnimeRef | null>(null)
+  const [activeMood, setActiveMood] = useState<string | null>(null)
 
   const scrollToFeed = () => feedRef.current?.scrollIntoView({ behavior: 'smooth' })
+
+  const visible = activeMood ? stories.filter((s) => s.mood === activeMood) : stories
 
   return (
     <>
@@ -25,8 +30,30 @@ export default function FeedPage() {
 
       <div className="container" ref={feedRef}>
         <div className={styles.feedHead}>
-          <h2 className={styles.feedTitle}>Latest stories</h2>
+          <h2 className={styles.feedTitle}>
+            {activeMood ? 'For when you feel…' : 'Latest stories'}
+          </h2>
         </div>
+
+        {moods.length > 0 && (
+          <div className={styles.moodFilter}>
+            <button
+              className={`${styles.moodChip} ${activeMood === null ? styles.moodOn : ''}`}
+              onClick={() => setActiveMood(null)}
+            >
+              All
+            </button>
+            {moods.map((m) => (
+              <button
+                key={m.slug}
+                className={`${styles.moodChip} ${activeMood === m.slug ? styles.moodOn : ''}`}
+                onClick={() => setActiveMood(m.slug)}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         {loading && (
           <div className={styles.skeletonGrid}>
@@ -51,8 +78,15 @@ export default function FeedPage() {
           </div>
         )}
 
-        {!loading && !error && stories.length > 0 && (
-          <MasonryGrid stories={stories} onToggleLike={toggleLike} onPlay={(s) => setTrailer(s.anime)} />
+        {!loading && !error && stories.length > 0 && visible.length === 0 && (
+          <div className={styles.state}>
+            <p>No stories tagged this feeling yet.</p>
+            <PillButton onClick={openAddStory}>Add the first one</PillButton>
+          </div>
+        )}
+
+        {!loading && !error && visible.length > 0 && (
+          <MasonryGrid stories={visible} onToggleLike={toggleLike} onPlay={(s) => setTrailer(s.anime)} />
         )}
       </div>
 

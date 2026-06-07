@@ -1,5 +1,6 @@
 import { motion, useReducedMotion, useScroll, useTransform, type Variants } from 'framer-motion'
 import { useUI } from '../context/ui'
+import { useSettings } from '../context/settings'
 import PillButton from './PillButton'
 import { SearchIcon, ChevronDownIcon } from './icons'
 import styles from './Hero.module.css'
@@ -22,6 +23,7 @@ const item: Variants = {
 
 export default function Hero({ count, onExplore }: HeroProps) {
   const { openAddStory } = useUI()
+  const { settings } = useSettings()
   const reduce = useReducedMotion()
   const { scrollY } = useScroll()
   const y = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 80])
@@ -36,10 +38,10 @@ export default function Hero({ count, onExplore }: HeroProps) {
         animate="show"
       >
         <motion.p className={styles.kicker} variants={item}>
-          ✦ a quiet wall for loud feelings ✦
+          ✦ {settings.heroKicker} ✦
         </motion.p>
         <motion.h1 className={styles.title} variants={item}>
-          What did this <em>anime</em> mean to you?
+          {settings.heroPrompt}
         </motion.h1>
         <motion.p className={styles.sub} variants={item}>
           {count.toLocaleString()} {count === 1 ? 'story' : 'stories'} and counting

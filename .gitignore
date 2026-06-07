@@ -25,3 +25,5 @@ dist-ssr
 
 # Conversation exports accidentally dropped here by /export
 *-local-command-caveat*.txt
+
+.vercel

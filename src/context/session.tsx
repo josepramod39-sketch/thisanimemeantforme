@@ -1,14 +1,19 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { ensureAnonSession } from '../lib/supabase'
+import { ensureAnonSession, supabase, ADMIN_EMAIL } from '../lib/supabase'
 import { createProfile, getMyProfile, isUsernameTaken } from '../lib/db'
 
 interface SessionState {
   userId: string | null
   username: string | null
+  email: string | null
+  isAdmin: boolean
   ready: boolean
   /** Create the caller's profile with this handle. Throws if taken/invalid. */
   claimUsername: (name: string) => Promise<void>
   checkUsername: (name: string) => Promise<boolean>
+  /** Send a magic-link sign-in email (for admin access). */
+  signInWithEmail: (email: string) => Promise<void>
+  signOut: () => Promise<void>
 }
 
 const SessionContext = createContext<SessionState | null>(null)
@@ -16,26 +21,36 @@ const SessionContext = createContext<SessionState | null>(null)
 export function SessionProvider({ children }: { children: ReactNode }) {
   const [userId, setUserId] = useState<string | null>(null)
   const [username, setUsername] = useState<string | null>(null)
+  const [email, setEmail] = useState<string | null>(null)
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
     let cancelled = false
-    ;(async () => {
-      const session = await ensureAnonSession()
-      if (cancelled) return
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       const uid = session?.user?.id ?? null
       setUserId(uid)
+      setEmail(session?.user?.email ?? null)
       if (uid) {
-        try {
-          const profile = await getMyProfile(uid)
-          if (!cancelled && profile) setUsername(profile.username)
-        } catch {
-          /* profile load is best-effort */
-        }
+        getMyProfile(uid)
+          .then((p) => setUsername(p?.username ?? null))
+          .catch(() => {})
+      } else {
+        setUsername(null)
       }
+    })
+
+    ;(async () => {
+      // Guarantee a session for anonymous visitors; keeps an existing
+      // (e.g. magic-link admin) session untouched.
+      await ensureAnonSession()
       if (!cancelled) setReady(true)
     })()
-    return () => { cancelled = true }
+
+    return () => {
+      cancelled = true
+      sub.subscription.unsubscribe()
+    }
   }, [])
 
   const claimUsername = async (name: string) => {
@@ -55,8 +70,25 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     return !(await isUsernameTaken(handle))
   }
 
+  const signInWithEmail = async (addr: string) => {
+    const { error } = await supabase.auth.signInWithOtp({
+      email: addr.trim(),
+      options: { emailRedirectTo: `${window.location.origin}/admin` },
+    })
+    if (error) throw new Error(error.message)
+  }
+
+  const signOut = async () => {
+    await supabase.auth.signOut()
+    await ensureAnonSession()
+  }
+
+  const isAdmin = (email ?? '').toLowerCase() === ADMIN_EMAIL
+
   return (
-    <SessionContext.Provider value={{ userId, username, ready, claimUsername, checkUsername }}>
+    <SessionContext.Provider
+      value={{ userId, username, email, isAdmin, ready, claimUsername, checkUsername, signInWithEmail, signOut }}
+    >
       {children}
     </SessionContext.Provider>
   )

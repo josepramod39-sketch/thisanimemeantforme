@@ -75,6 +75,10 @@ export default function StoryCard({ story, onToggleLike, onPlay }: StoryCardProp
 
       <p className={styles.body}>{story.body}</p>
 
+      {story.moodLabel && (
+        <span className={styles.mood}>for when you feel {story.moodLabel.toLowerCase()}</span>
+      )}
+
       <footer className={styles.foot}>
         <Link to={`/u/${story.author}`} className={styles.author}>
           — {story.author}

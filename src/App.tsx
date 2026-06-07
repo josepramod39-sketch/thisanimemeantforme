@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { UIProvider, useUI } from './context/ui'
 import { SessionProvider, useSession } from './context/session'
+import { SettingsProvider } from './context/settings'
 import { StoriesProvider, useStories } from './context/stories'
 import Layout from './components/Layout'
 import AddStoryModal, { type StoryDraft } from './components/AddStoryModal'
@@ -15,6 +16,7 @@ import NotFound from './pages/NotFound'
 // Heavier routes are split out of the initial bundle.
 const CalendarPage = lazy(() => import('./pages/CalendarPage'))
 const ProfilePage = lazy(() => import('./pages/ProfilePage'))
+const AdminPage = lazy(() => import('./pages/AdminPage'))
 
 function AppShell() {
   const { addStoryOpen, closeAddStory } = useUI()
@@ -52,6 +54,7 @@ function AppShell() {
               <Route path="/" element={<FeedPage />} />
               <Route path="/calendar" element={<CalendarPage />} />
               <Route path="/u/:username" element={<ProfilePage />} />
+              <Route path="/admin" element={<AdminPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
@@ -71,11 +74,13 @@ function AppShell() {
 export default function App() {
   return (
     <UIProvider>
-      <SessionProvider>
-        <StoriesProvider>
-          <AppShell />
-        </StoriesProvider>
-      </SessionProvider>
+      <SettingsProvider>
+        <SessionProvider>
+          <StoriesProvider>
+            <AppShell />
+          </StoriesProvider>
+        </SessionProvider>
+      </SettingsProvider>
     </UIProvider>
   )
 }

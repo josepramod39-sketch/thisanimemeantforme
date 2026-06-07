@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import type { Story } from './types'
+import type { Story, Mood, SiteSettings } from './types'
 import type { StoryDraft } from '../components/AddStoryModal'
 
 interface FeedRow {
@@ -19,6 +19,8 @@ interface FeedRow {
   author_avatar_seed: string | null
   like_count: number
   liked_by_me: boolean
+  mood: string | null
+  mood_label: string | null
 }
 
 function rowToStory(r: FeedRow): Story {
@@ -40,6 +42,8 @@ function rowToStory(r: FeedRow): Story {
     likeCount: r.like_count,
     likedByMe: r.liked_by_me,
     createdAt: r.created_at,
+    mood: r.mood,
+    moodLabel: r.mood_label,
   }
 }
 
@@ -103,7 +107,7 @@ export async function createProfile(userId: string, username: string): Promise<v
 }
 
 export async function insertStory(draft: StoryDraft, authorId: string): Promise<Story> {
-  const { anime, body } = draft
+  const { anime, body, mood } = draft
   const { data, error } = await supabase
     .from('stories')
     .insert({
@@ -117,6 +121,7 @@ export async function insertStory(draft: StoryDraft, authorId: string): Promise<
       anime_trailer_id: anime.trailer?.id ?? null,
       anime_trailer_site: anime.trailer?.site ?? null,
       body,
+      mood: mood ?? null,
     })
     .select('id, created_at')
     .single()
@@ -129,7 +134,63 @@ export async function insertStory(draft: StoryDraft, authorId: string): Promise<
     likeCount: 0,
     likedByMe: false,
     createdAt: data.created_at,
+    mood: mood ?? null,
+    moodLabel: null, // resolved on next feed load
   }
+}
+
+// --- Moods (phases) ------------------------------------------------------
+export async function listMoods(): Promise<Mood[]> {
+  const { data, error } = await supabase
+    .from('moods')
+    .select('slug, label, sort')
+    .order('sort', { ascending: true })
+  if (error) throw new Error(error.message)
+  return data as Mood[]
+}
+
+export async function upsertMood(m: Mood): Promise<void> {
+  const { error } = await supabase.from('moods').upsert(m)
+  if (error) throw new Error(error.message)
+}
+
+export async function deleteMood(slug: string): Promise<void> {
+  const { error } = await supabase.from('moods').delete().eq('slug', slug)
+  if (error) throw new Error(error.message)
+}
+
+// --- Site settings -------------------------------------------------------
+export async function getSettings(): Promise<SiteSettings> {
+  const { data, error } = await supabase
+    .from('site_settings')
+    .select('brand_title, hero_kicker, hero_prompt')
+    .eq('id', 1)
+    .single()
+  if (error) throw new Error(error.message)
+  return {
+    brandTitle: data.brand_title,
+    heroKicker: data.hero_kicker,
+    heroPrompt: data.hero_prompt,
+  }
+}
+
+export async function updateSettings(s: SiteSettings): Promise<void> {
+  const { error } = await supabase
+    .from('site_settings')
+    .update({
+      brand_title: s.brandTitle,
+      hero_kicker: s.heroKicker,
+      hero_prompt: s.heroPrompt,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', 1)
+  if (error) throw new Error(error.message)
+}
+
+// --- Admin moderation ----------------------------------------------------
+export async function adminDeleteStory(id: string): Promise<void> {
+  const { error } = await supabase.from('stories').delete().eq('id', id)
+  if (error) throw new Error(error.message)
 }
 
 export async function setLike(storyId: string, userId: string, liked: boolean): Promise<void> {

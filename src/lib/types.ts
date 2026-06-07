@@ -24,6 +24,20 @@ export interface Story {
   likeCount: number;
   likedByMe: boolean;
   createdAt: string; // ISO
+  mood?: string | null; // mood slug
+  moodLabel?: string | null;
+}
+
+export interface Mood {
+  slug: string;
+  label: string;
+  sort: number;
+}
+
+export interface SiteSettings {
+  brandTitle: string;
+  heroKicker: string;
+  heroPrompt: string;
 }
 
 export interface AiringEntry {

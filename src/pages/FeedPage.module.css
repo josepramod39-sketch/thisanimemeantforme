@@ -10,6 +10,32 @@
   color: var(--text);
 }
 
+.moodFilter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.moodChip {
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--line);
+  background: var(--surface);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+
+.moodChip:hover { border-color: var(--magenta); color: var(--text); }
+
+.moodOn {
+  background: var(--magenta);
+  border-color: var(--magenta);
+  color: #fff;
+}
+
 .state {
   display: flex;
   flex-direction: column;

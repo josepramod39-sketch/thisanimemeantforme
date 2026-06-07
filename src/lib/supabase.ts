@@ -8,11 +8,14 @@ if (!url || !key) {
   console.warn('[animefor] Missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY in .env.local')
 }
 
+/** The only account granted admin powers (also enforced server-side via RLS). */
+export const ADMIN_EMAIL = 'josepramod39@gmail.com'
+
 export const supabase = createClient(url, key, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: false,
+    detectSessionInUrl: true, // parse magic-link tokens on /admin
   },
 })
 
