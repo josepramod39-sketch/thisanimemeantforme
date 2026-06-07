@@ -1,0 +1,40 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: var(--shadow-card);
+}
+
+.pill:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.primary {
+  background: var(--ink);
+  color: #fff;
+}
+
+.outline {
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--text);
+  box-shadow: none;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.icon svg {
+  width: 17px;
+  height: 17px;
+}

@@ -1,0 +1,52 @@
+.col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.head {
+  position: sticky;
+  top: 62px;
+  z-index: 5;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+}
+
+.today {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.today .weekday, .today .date { color: #fff; }
+
+.weekday {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.date {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.none {
+  text-align: center;
+  color: var(--text-faint);
+  padding: 8px 0;
+}

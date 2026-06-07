@@ -1,0 +1,120 @@
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  padding: var(--pad-card);
+  box-shadow: var(--shadow-card);
+  break-inside: avoid;
+  margin-bottom: var(--gutter);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  transition: box-shadow 0.25s var(--ease-out);
+  will-change: transform;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lift);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.coverWrap {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.cover {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-art);
+  object-fit: cover;
+  display: grid;
+  place-items: center;
+}
+
+.coverMono {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: #fff;
+  font-size: 1.05rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.playBtn {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-art);
+  background: rgba(0, 0, 0, 0.42);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.coverWrap:hover .playBtn { opacity: 1; }
+.playBtn svg { width: 18px; height: 18px; }
+
+.track {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.song {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--text);
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.artist {
+  margin-top: 3px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ext {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  color: var(--text-faint);
+  transition: color 0.2s, transform 0.2s;
+}
+
+.ext:hover { color: var(--anilist); transform: translateY(-1px); }
+.ext svg { width: 17px; height: 17px; }
+
+.body {
+  margin-top: 14px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #3a3a3a;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.foot {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.author {
+  font-size: 0.82rem;
+  color: var(--text-faint);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.author:hover { color: var(--magenta); }

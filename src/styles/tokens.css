@@ -1,0 +1,45 @@
+/* animefor — design tokens (from the ThisSongMeant spec, anime-tuned) */
+:root {
+  /* Surfaces */
+  --bg: #fdf8e7;          /* cream / soft beige */
+  --bg-deep: #f6edcf;     /* slightly deeper cream for gradients */
+  --surface: #ffffff;     /* white cards */
+  --surface-2: #fcfaf3;
+
+  /* Text */
+  --text: #222222;        /* dark charcoal */
+  --text-muted: #757575;  /* medium gray */
+  --text-faint: #a9a29a;
+
+  /* Brand / accents */
+  --magenta: #e5337e;     /* avatar face, heart fill */
+  --magenta-soft: #ffe1ee;
+  --yellow: #ffc83d;      /* avatar backdrop */
+  --pink: #ff5fa2;        /* bold anime accent */
+  --ink: #1a1a1a;         /* primary button bg */
+  --anilist: #02a9ff;     /* AniList link blue */
+  --line: rgba(34, 34, 34, 0.12);
+
+  /* Elevation */
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-lift: 0 16px 34px rgba(0, 0, 0, 0.13);
+  --shadow-pop: 0 24px 60px rgba(0, 0, 0, 0.22);
+
+  /* Radius */
+  --radius-card: 14px;
+  --radius-art: 6px;
+  --radius-pill: 9999px;
+
+  /* Type */
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Layout */
+  --gutter: 24px;
+  --pad-card: 16px;
+  --maxw: 1180px;
+
+  /* Motion */
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

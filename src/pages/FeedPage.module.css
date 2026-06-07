@@ -1,0 +1,50 @@
+.feedHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.feedTitle {
+  font-size: 1.5rem;
+  color: var(--text);
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 64px 20px 40px;
+  color: var(--text-muted);
+}
+
+.emptyTitle {
+  font-size: 1.6rem;
+  color: var(--text);
+}
+
+.skeletonGrid {
+  column-count: 4;
+  column-gap: var(--gutter);
+}
+
+.skeleton {
+  break-inside: avoid;
+  margin-bottom: var(--gutter);
+  border-radius: var(--radius-card);
+  background: linear-gradient(100deg, #fff 30%, #f3eeda 50%, #fff 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  box-shadow: var(--shadow-card);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (max-width: 1080px) { .skeletonGrid { column-count: 3; } }
+@media (max-width: 760px) { .skeletonGrid { column-count: 2; } }
+@media (max-width: 480px) { .skeletonGrid { column-count: 1; } }

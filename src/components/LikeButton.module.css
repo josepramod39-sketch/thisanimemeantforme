@@ -1,0 +1,48 @@
+.like {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-faint);
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  transition: color 0.2s;
+  padding: 4px;
+  margin: -4px;
+  border-radius: var(--radius-pill);
+}
+
+.like:hover { color: var(--magenta); }
+
+.liked { color: var(--magenta); }
+
+.heartWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.heart {
+  display: inline-flex;
+}
+
+.heart svg {
+  width: 16px;
+  height: 16px;
+}
+
+.burst {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--magenta) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.count {
+  min-width: 10px;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}

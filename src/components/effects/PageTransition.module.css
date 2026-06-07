@@ -1,0 +1,16 @@
+.wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    115deg,
+    transparent 0px,
+    transparent 14px,
+    rgba(229, 51, 126, 0.16) 14px,
+    rgba(229, 51, 126, 0.16) 18px,
+    rgba(255, 200, 61, 0.14) 18px,
+    rgba(255, 200, 61, 0.14) 22px
+  );
+  mix-blend-mode: multiply;
+}

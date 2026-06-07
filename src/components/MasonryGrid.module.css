@@ -1,0 +1,20 @@
+.grid {
+  column-count: 4;
+  column-gap: var(--gutter);
+}
+
+.item {
+  break-inside: avoid;
+}
+
+@media (max-width: 1080px) {
+  .grid { column-count: 3; }
+}
+
+@media (max-width: 760px) {
+  .grid { column-count: 2; }
+}
+
+@media (max-width: 480px) {
+  .grid { column-count: 1; }
+}

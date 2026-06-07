@@ -1,0 +1,113 @@
+.head {
+  margin-bottom: 18px;
+  padding-right: 36px;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: var(--text);
+}
+
+.lead {
+  margin-top: 6px;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.write {
+  display: flex;
+  flex-direction: column;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+}
+
+.chipArt {
+  width: 42px;
+  height: 56px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: var(--font-serif);
+  font-weight: 700;
+}
+
+.chipMeta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chipName {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.chipSub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.change {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--magenta);
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  flex: 0 0 auto;
+}
+
+.change:hover { background: var(--magenta-soft); }
+
+.textarea {
+  margin-top: 14px;
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  padding: 14px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.textarea:focus { border-color: var(--magenta); }
+
+.footer {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.count {
+  font-size: 0.82rem;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.error {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #c0392b;
+}

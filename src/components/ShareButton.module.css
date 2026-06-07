@@ -1,0 +1,21 @@
+.share {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.share:hover {
+  color: var(--text);
+  border-color: var(--text);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.share svg { width: 15px; height: 15px; }
+.label { line-height: 1; }
