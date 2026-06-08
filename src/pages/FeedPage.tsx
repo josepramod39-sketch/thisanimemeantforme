@@ -31,7 +31,9 @@ export default function FeedPage() {
       <div className="container" ref={feedRef}>
         <div className={styles.feedHead}>
           <h2 className={styles.feedTitle}>
-            {activeMood ? 'For when you feel…' : 'Latest stories'}
+            {activeMood
+              ? `You're feeling ${(moods.find((m) => m.slug === activeMood)?.label ?? '').toLowerCase()}`
+              : "You're feeling…"}
           </h2>
         </div>
 
