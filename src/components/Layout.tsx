@@ -5,6 +5,23 @@ import { useSettings } from '../context/settings'
 import { CalendarIcon, PlusIcon } from './icons'
 import styles from './Layout.module.css'
 
+/** Render any brand title in the serif wordmark with a magenta accent. */
+function BrandMark({ title }: { title: string }) {
+  const t = title.trim()
+  // "…for" → accent the trailing "for" (the default animefor look).
+  if (t.length > 3 && t.toLowerCase().endsWith('for')) {
+    return <>{t.slice(0, -3)}<span className={styles.brandAccent}>{t.slice(-3)}</span></>
+  }
+  // Multiple words → accent the last word.
+  const words = t.split(/\s+/)
+  if (words.length > 1) {
+    const last = words.pop() as string
+    return <>{words.join(' ')}{' '}<span className={styles.brandAccent}>{last}</span></>
+  }
+  // Single word → vibrant magenta wordmark (not dull).
+  return <span className={styles.brandSolo}>{t}</span>
+}
+
 export default function Layout({ children }: { children: ReactNode }) {
   const { openAddStory } = useUI()
   const { settings } = useSettings()
@@ -15,9 +32,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <header className={styles.bar}>
         <div className={`container ${styles.inner}`}>
           <Link to="/" className={styles.brand} aria-label={`${brand} home`}>
-            {brand === 'animefor'
-              ? <>anime<span className={styles.brandAccent}>for</span></>
-              : brand}
+            <BrandMark title={brand} />
           </Link>
 
           <nav className={styles.nav}>
