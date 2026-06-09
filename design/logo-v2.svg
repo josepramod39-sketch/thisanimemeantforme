@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="600" viewBox="0 0 1000 600">
+  <defs>
+    <symbol id="mark" viewBox="0 0 120 120">
+      <rect width="120" height="120" rx="30" fill="#e5337e"/>
+      <text x="59" y="70" text-anchor="middle" dominant-baseline="central"
+        font-family="'Playfair Display', Georgia, serif" font-style="italic" font-weight="700"
+        font-size="86" fill="#fffaf0">a</text>
+      <circle cx="92" cy="30" r="9" fill="#ffc83d"/>
+    </symbol>
+  </defs>
+
+  <rect width="1000" height="600" fill="#fdf8e7"/>
+  <text x="60" y="58" font-family="Inter, Helvetica, Arial, sans-serif" font-size="14"
+    letter-spacing="3" fill="#a99f86">ANIMEFOR — BRAND MARK</text>
+
+  <!-- Primary lockup -->
+  <use href="#mark" x="300" y="120" width="118" height="118"/>
+  <text x="438" y="205" font-family="'Playfair Display', Georgia, serif" font-weight="700"
+    font-size="74" fill="#1f1b17">anime<tspan font-style="italic" fill="#e5337e">for</tspan></text>
+  <text x="440" y="246" font-family="Inter, Helvetica, Arial, sans-serif" font-size="16"
+    fill="#757575">what did this anime mean to you?</text>
+
+  <line x1="60" y1="320" x2="940" y2="320" stroke="#e7dfc4" stroke-width="1"/>
+
+  <!-- Favicon scalability -->
+  <use href="#mark" x="70" y="380" width="92" height="92"/>
+  <use href="#mark" x="190" y="402" width="52" height="52"/>
+  <use href="#mark" x="270" y="416" width="30" height="30"/>
+  <text x="70" y="510" font-family="Inter, Helvetica, Arial, sans-serif" font-size="14"
+    fill="#757575">Scales to a crisp favicon / app icon</text>
+
+  <!-- Dark variant -->
+  <rect x="660" y="360" width="280" height="150" rx="20" fill="#1f1b17"/>
+  <use href="#mark" x="690" y="395" width="80" height="80"/>
+  <text x="788" y="448" font-family="'Playfair Display', Georgia, serif" font-weight="700"
+    font-size="40" fill="#fdf8e7">anime<tspan font-style="italic" fill="#ff5fa2">for</tspan></text>
+  <text x="660" y="538" font-family="Inter, Helvetica, Arial, sans-serif" font-size="14"
+    fill="#757575">Works on a dark background too</text>
+</svg>

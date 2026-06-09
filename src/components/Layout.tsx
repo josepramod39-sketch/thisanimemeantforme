@@ -2,7 +2,7 @@ import { Link, NavLink } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { useUI } from '../context/ui'
 import { useSettings } from '../context/settings'
-import { CalendarIcon, PlusIcon } from './icons'
+import { CalendarIcon, PlusIcon, LogoIcon } from './icons'
 import styles from './Layout.module.css'
 
 /** Render any brand title in the serif wordmark with a magenta accent. */
@@ -32,6 +32,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <header className={styles.bar}>
         <div className={`container ${styles.inner}`}>
           <Link to="/" className={styles.brand} aria-label={`${brand} home`}>
+            <LogoIcon className={styles.brandLogo} />
             <BrandMark title={brand} />
           </Link>
 
@@ -53,9 +54,22 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <footer className={styles.footer}>
         <div className="container">
-          <span>{brand} — {settings.heroPrompt}</span>
+          <span>
+            Inspired by{' '}
+            <a href="https://www.watchsomethingwonderful.com/" target="_blank" rel="noopener noreferrer" className={styles.footLink}>
+              Watch Something Wonderful
+            </a>{' '}
+            &amp;{' '}
+            <a href="https://www.thissongmeant.me/" target="_blank" rel="noopener noreferrer" className={styles.footLink}>
+              ThisSongMeant
+            </a>
+          </span>
           <span className={styles.footMeta}>
-            Anime data by AniList · clips via YouTube
+            Thanks to{' '}
+            <a href="https://x.com/akhil_bvs?s=20" target="_blank" rel="noopener noreferrer" className={styles.footLink}>
+              @akhil_bvs
+            </a>{' '}
+            for helping · Anime data by AniList · Clips via YouTube
           </span>
         </div>
       </footer>

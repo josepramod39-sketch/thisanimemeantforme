@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="720" viewBox="0 0 1000 720" font-family="'Playfair Display', Georgia, 'Times New Roman', serif">
+  <rect width="1000" height="720" fill="#fdf8e7"/>
+
+  <!-- corner petals -->
+  <g opacity="0.8">
+    <ellipse cx="60" cy="90" rx="9" ry="6" fill="#ff9ec6" transform="rotate(25 60 90)"/>
+    <ellipse cx="950" cy="120" rx="8" ry="5" fill="#ffc0d8" transform="rotate(-15 950 120)"/>
+    <ellipse cx="930" cy="650" rx="9" ry="6" fill="#ff5fa2" transform="rotate(40 930 650)"/>
+    <ellipse cx="70" cy="640" rx="7" ry="5" fill="#ffd66b" transform="rotate(-30 70 640)"/>
+  </g>
+
+  <!-- title -->
+  <text x="500" y="54" text-anchor="middle" font-size="34" font-weight="700" fill="#222222">anime<tspan font-style="italic" fill="#e5337e">for</tspan> — four logo directions</text>
+  <text x="500" y="84" text-anchor="middle" font-size="15" font-family="Inter, Helvetica, sans-serif" fill="#757575">pick a vibe and I'll turn it into a clean, real logo + favicon</text>
+
+  <!-- cards -->
+  <g>
+    <rect x="40" y="110" width="440" height="270" rx="20" fill="#ffffff" stroke="rgba(0,0,0,0.06)"/>
+    <rect x="520" y="110" width="440" height="270" rx="20" fill="#ffffff" stroke="rgba(0,0,0,0.06)"/>
+    <rect x="40" y="410" width="440" height="270" rx="20" fill="#ffffff" stroke="rgba(0,0,0,0.06)"/>
+    <rect x="520" y="410" width="440" height="270" rx="20" fill="#ffffff" stroke="rgba(0,0,0,0.06)"/>
+  </g>
+
+  <!-- A: monogram badge -->
+  <rect x="200" y="160" width="120" height="120" rx="26" fill="#fdf8e7" stroke="#e5337e" stroke-width="3"/>
+  <text x="260" y="222" text-anchor="middle" dominant-baseline="central" font-size="92" font-style="italic" font-weight="700" fill="#e5337e">a</text>
+  <circle cx="308" cy="172" r="12" fill="#ffc83d" stroke="#eab200" stroke-width="1"/>
+  <text x="260" y="350" text-anchor="middle" font-size="17" font-family="Inter, Helvetica, sans-serif" font-weight="600" fill="#555555">A &#183; Monogram &#8220;a&#8221; badge</text>
+
+  <!-- B: wordmark + sakura -->
+  <g transform="translate(740,158)">
+    <g>
+      <ellipse cx="0" cy="-13" rx="8" ry="13" fill="#ff9ec6" stroke="#ff5fa2" stroke-width="1"/>
+      <ellipse cx="0" cy="-13" rx="8" ry="13" fill="#ff9ec6" stroke="#ff5fa2" stroke-width="1" transform="rotate(72)"/>
+      <ellipse cx="0" cy="-13" rx="8" ry="13" fill="#ff9ec6" stroke="#ff5fa2" stroke-width="1" transform="rotate(144)"/>
+      <ellipse cx="0" cy="-13" rx="8" ry="13" fill="#ff9ec6" stroke="#ff5fa2" stroke-width="1" transform="rotate(216)"/>
+      <ellipse cx="0" cy="-13" rx="8" ry="13" fill="#ff9ec6" stroke="#ff5fa2" stroke-width="1" transform="rotate(288)"/>
+      <circle cx="0" cy="0" r="6" fill="#ffc83d"/>
+    </g>
+  </g>
+  <text x="740" y="250" text-anchor="middle" font-size="56" font-weight="700" fill="#222222">anime<tspan font-style="italic" fill="#e5337e">for</tspan></text>
+  <text x="740" y="350" text-anchor="middle" font-size="17" font-family="Inter, Helvetica, sans-serif" font-weight="600" fill="#555555">B &#183; Wordmark + sakura</text>
+
+  <!-- C: the 'for' tag -->
+  <text x="150" y="545" dominant-baseline="central" font-size="48" font-weight="700" fill="#222222">anime</text>
+  <rect x="306" y="520" width="92" height="50" rx="25" fill="#e5337e"/>
+  <text x="352" y="546" text-anchor="middle" dominant-baseline="central" font-size="30" font-style="italic" font-weight="700" fill="#ffffff">for</text>
+  <text x="260" y="650" text-anchor="middle" font-size="17" font-family="Inter, Helvetica, sans-serif" font-weight="600" fill="#555555">C &#183; The &#8220;for&#8221; tag</text>
+
+  <!-- D: story heart -->
+  <path d="M740,512 C735,503 721,502 719,514 C717,525 730,533 740,540 C750,533 763,525 761,514 C759,502 745,503 740,512 Z" fill="#e5337e"/>
+  <circle cx="731" cy="516" r="2.4" fill="#fff"/>
+  <circle cx="740" cy="516" r="2.4" fill="#fff"/>
+  <circle cx="749" cy="516" r="2.4" fill="#fff"/>
+  <text x="740" y="580" text-anchor="middle" font-size="40" font-weight="700" fill="#222222">anime<tspan font-style="italic" fill="#e5337e">for</tspan></text>
+  <text x="740" y="650" text-anchor="middle" font-size="17" font-family="Inter, Helvetica, sans-serif" font-weight="600" fill="#555555">D &#183; Story-heart emblem</text>
+</svg>

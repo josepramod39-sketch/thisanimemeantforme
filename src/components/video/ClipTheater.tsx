@@ -81,6 +81,12 @@ function Theater({ clips }: { clips: ClipRecord[] }) {
     <section className={styles.theater}>
       <div className="container">
         <div className={styles.stage}>
+          <div className={styles.antennas} aria-hidden="true">
+            <div className={styles.antennaLeft} />
+            <div className={styles.antennaRight} />
+            <div className={styles.antennaBase} />
+          </div>
+
           <div className={styles.tv}>
             <div className={styles.bezelTop}>
               <span className={styles.lamp} />

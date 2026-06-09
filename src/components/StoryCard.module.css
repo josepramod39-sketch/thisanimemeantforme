@@ -1,45 +1,48 @@
 .card {
   background: var(--surface);
   border-radius: var(--radius-card);
-  padding: var(--pad-card);
-  box-shadow: var(--shadow-card);
+  padding: 24px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.03);
   break-inside: avoid;
   margin-bottom: var(--gutter);
-  border: 1px solid rgba(0, 0, 0, 0.03);
-  transition: box-shadow 0.25s var(--ease-out);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-left: 4px solid var(--magenta);
+  transition: box-shadow 0.3s ease;
   will-change: transform;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lift);
-}
-
-.head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
 }
 
 .coverWrap {
   position: relative;
-  flex: 0 0 auto;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
-.cover {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-art);
+.coverImg, .coverFallback {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: grid;
   place-items: center;
+  transition: transform 0.7s ease;
+}
+
+.card:hover .coverImg, .card:hover .coverFallback {
+  transform: scale(1.05);
 }
 
 .coverMono {
   font-family: var(--font-serif);
   font-weight: 700;
   color: #fff;
-  font-size: 1.05rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  font-size: 2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
 .playBtn {
@@ -47,7 +50,6 @@
   inset: 0;
   display: grid;
   place-items: center;
-  border-radius: var(--radius-art);
   background: rgba(0, 0, 0, 0.42);
   color: #fff;
   opacity: 0;
@@ -55,78 +57,82 @@
 }
 
 .coverWrap:hover .playBtn { opacity: 1; }
-.playBtn svg { width: 18px; height: 18px; }
+.playBtn svg { width: 48px; height: 48px; }
 
-.track {
-  flex: 1 1 auto;
-  min-width: 0;
+.titleWrap {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-.song {
+.title {
   font-family: var(--font-serif);
-  font-weight: 700;
-  font-size: 1.02rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+  font-style: italic;
   color: var(--text);
-  line-height: 1.2;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  line-height: 1.3;
 }
 
-.artist {
-  margin-top: 3px;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ext {
-  flex: 0 0 auto;
-  align-self: flex-start;
+.crunchyrollLink {
   color: var(--text-faint);
-  transition: color 0.2s, transform 0.2s;
+  transition: color 0.2s;
+  padding-top: 4px;
 }
-
-.ext:hover { color: var(--anilist); transform: translateY(-1px); }
-.ext svg { width: 17px; height: 17px; }
+.crunchyrollLink:hover { color: #F47521; }
+.crunchyrollLink svg { width: 20px; height: 20px; }
 
 .body {
-  margin-top: 14px;
-  font-size: 0.95rem;
-  line-height: 1.55;
-  color: #3a3a3a;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 20px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.mood {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 4px 11px;
-  border-radius: var(--radius-pill);
-  background: var(--magenta-soft);
-  color: var(--magenta);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-}
-
-.foot {
-  margin-top: 16px;
+.meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.authorGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-faint);
+}
+
+.personIcon {
+  width: 14px;
+  height: 14px;
 }
 
 .author {
-  font-size: 0.82rem;
-  color: var(--text-faint);
-  font-weight: 500;
+  color: var(--text-muted);
   transition: color 0.2s;
+  font-weight: 500;
 }
 
-.author:hover { color: var(--magenta); }
+.author:hover {
+  color: var(--magenta);
+}
+
+.dot {
+  margin: 0 4px;
+}
+
+.studio {
+  color: var(--text-faint);
+}
+
+.likeWrapper {
+  display: flex;
+}

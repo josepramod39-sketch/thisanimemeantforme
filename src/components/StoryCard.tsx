@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import type { Story } from '../lib/types'
 import { hueFromString, initials } from '../lib/format'
 import LikeButton from './LikeButton'
-import { ExternalIcon, PlayIcon } from './icons'
+import { CrunchyrollIcon, PlayIcon, UserIcon } from './icons'
 import styles from './StoryCard.module.css'
 
 interface StoryCardProps {
@@ -18,7 +18,7 @@ function Cover({ anime }: { story?: never; anime: Story['anime'] }) {
   if (anime.coverUrl && !broken) {
     return (
       <img
-        className={styles.cover}
+        className={styles.coverImg}
         src={anime.coverUrl}
         alt={anime.title}
         loading="lazy"
@@ -29,7 +29,7 @@ function Cover({ anime }: { story?: never; anime: Story['anime'] }) {
   const hue = hueFromString(anime.title)
   return (
     <div
-      className={styles.cover}
+      className={styles.coverFallback}
       style={{ background: `linear-gradient(135deg, hsl(${hue},70%,62%), hsl(${(hue + 40) % 360},75%,52%))` }}
       aria-label={anime.title}
     >
@@ -48,46 +48,47 @@ export default function StoryCard({ story, onToggleLike, onPlay }: StoryCardProp
       whileHover={{ y: -6 }}
       transition={{ type: 'spring', stiffness: 320, damping: 26 }}
     >
-      <header className={styles.head}>
-        <div className={styles.coverWrap}>
-          <Cover anime={anime} />
-          {hasTrailer && (
-            <button className={styles.playBtn} onClick={() => onPlay!(story)} aria-label="Play trailer">
-              <PlayIcon />
-            </button>
-          )}
-        </div>
-        <div className={styles.track}>
-          <h3 className={styles.song}>{anime.title}</h3>
-          <p className={styles.artist}>{anime.studio || anime.format || 'Anime'}</p>
-        </div>
+      <div className={styles.coverWrap}>
+        <Cover anime={anime} />
+        {hasTrailer && (
+          <button className={styles.playBtn} onClick={() => onPlay!(story)} aria-label="Play trailer">
+            <PlayIcon />
+          </button>
+        )}
+      </div>
+
+      <header className={styles.titleWrap}>
+        <h3 className={styles.title}>{anime.title}</h3>
         <a
-          className={styles.ext}
-          href={`https://anilist.co/anime/${anime.anilistId}`}
+          className={styles.crunchyrollLink}
+          href={`https://www.crunchyroll.com/search?q=${encodeURIComponent(anime.title)}`}
           target="_blank"
           rel="noreferrer"
-          aria-label="View on AniList"
+          aria-label="Search on Crunchyroll"
           onClick={(e) => e.stopPropagation()}
         >
-          <ExternalIcon />
+          <CrunchyrollIcon />
         </a>
       </header>
 
-      <p className={styles.body}>{story.body}</p>
+      <p className={styles.body}>"{story.body}"</p>
 
-      {story.moodLabel && (
-        <span className={styles.mood}>for when you feel {story.moodLabel.toLowerCase()}</span>
-      )}
-
-      <footer className={styles.foot}>
-        <Link to={`/u/${story.author}`} className={styles.author}>
-          — {story.author}
-        </Link>
-        <LikeButton
-          liked={story.likedByMe}
-          count={story.likeCount}
-          onToggle={() => onToggleLike(story.id)}
-        />
+      <footer className={styles.meta}>
+        <div className={styles.authorGroup}>
+          <UserIcon className={styles.personIcon} />
+          <Link to={`/u/${story.author}`} className={styles.author}>
+            @{story.author}
+          </Link>
+          <span className={styles.dot}>•</span>
+          <span className={styles.studio}>{anime.studio || anime.format || 'Anime'}</span>
+        </div>
+        <div className={styles.likeWrapper}>
+          <LikeButton
+            liked={story.likedByMe}
+            count={story.likeCount}
+            onToggle={() => onToggleLike(story.id)}
+          />
+        </div>
       </footer>
     </motion.article>
   )

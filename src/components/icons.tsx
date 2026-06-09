@@ -130,3 +130,32 @@ export const CloseIcon = (p: P) => (
     <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 )
+
+export const CrunchyrollIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+    <path d="M2.909 13.436C2.914 7.61 7.642 2.893 13.468 2.898c5.576.005 10.137 4.339 10.51 9.819q.021-.351.022-.706C24.007 5.385 18.64.006 12.012 0S.007 5.36 0 11.988 5.36 23.994 11.988 24q.412 0 .815-.027c-5.526-.338-9.9-4.928-9.894-10.538Zm16.284.155a4.1 4.1 0 0 1-4.095-4.103 4.1 4.1 0 0 1 2.712-3.855 8.95 8.95 0 0 0-4.187-1.037 9.007 9.007 0 1 0 8.997 9.016q-.001-.847-.15-1.651a4.1 4.1 0 0 1-3.278 1.63Z" />
+  </svg>
+)
+
+export const LogoIcon = (p: P) => (
+  <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" {...p}>
+    <line x1="0" y1="50" x2="100" y2="50" strokeWidth="0.5" strokeDasharray="2 3" />
+    <line x1="75" y1="0" x2="75" y2="100" strokeWidth="0.5" strokeDasharray="2 3" />
+    <line x1="40" y1="25" x2="22" y2="8" />
+    <line x1="60" y1="25" x2="78" y2="8" />
+    <circle cx="22" cy="8" r="1.5" fill="currentColor" stroke="none" />
+    <circle cx="78" cy="8" r="1.5" fill="currentColor" stroke="none" />
+    <rect x="15" y="25" width="70" height="50" rx="6" />
+    <rect x="22" y="32" width="44" height="36" rx="4" />
+    <polygon points="38,40 38,60 52,50" fill="currentColor" strokeWidth="1" />
+    <circle cx="75" cy="40" r="3" fill="var(--magenta)" stroke="none" />
+    <circle cx="75" cy="50" r="2.5" fill="currentColor" stroke="none" />
+    <circle cx="75" cy="60" r="2.5" fill="currentColor" stroke="none" />
+  </svg>
+)
+export const UserIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </svg>
+)
