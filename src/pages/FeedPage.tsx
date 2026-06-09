@@ -31,11 +31,11 @@ export default function FeedPage() {
       <div className="container" ref={feedRef}>
         <div className={styles.feedHead}>
           <h2 className={styles.feedTitle}>
-            You're feeling{' '}
+            when you're feeling...{' '}
             <span className={styles.feelingAccent}>
               {activeMood
                 ? (moods.find((m) => m.slug === activeMood)?.label ?? '').toLowerCase()
-                : '…'}
+                : ''}
             </span>
           </h2>
         </div>
