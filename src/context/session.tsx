@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { ensureAnonSession, supabase, ADMIN_EMAIL } from '../lib/supabase'
+import { ensureAnonSession, supabase, ADMIN_EMAILS } from '../lib/supabase'
 import { createProfile, getMyProfile, isUsernameTaken } from '../lib/db'
 
 interface SessionState {
@@ -83,7 +83,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     await ensureAnonSession()
   }
 
-  const isAdmin = (email ?? '').toLowerCase() === ADMIN_EMAIL
+  const isAdmin = ADMIN_EMAILS.includes((email ?? '').toLowerCase())
 
   return (
     <SessionContext.Provider

@@ -11,7 +11,7 @@ import { useSession } from '../context/session'
 import { useSettings } from '../context/settings'
 import { timeAgo } from '../lib/format'
 import PillButton from '../components/PillButton'
-import { ADMIN_EMAIL } from '../lib/supabase'
+import { ADMIN_EMAILS } from '../lib/supabase'
 import styles from './AdminPage.module.css'
 
 export default function AdminPage() {
@@ -30,7 +30,7 @@ export default function AdminPage() {
 function SignIn({
   email, signInWithEmail, signOut,
 }: { email: string | null; signInWithEmail: (e: string) => Promise<void>; signOut: () => Promise<void> }) {
-  const [addr, setAddr] = useState(ADMIN_EMAIL)
+  const [addr, setAddr] = useState(ADMIN_EMAILS[0])
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
