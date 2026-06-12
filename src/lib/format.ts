@@ -49,8 +49,21 @@ export function hueFromString(s: string): number {
 }
 
 export function initials(title: string): string {
-  const words = title.replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+/)
+  const words = title.replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+/).filter(Boolean)
   if (words.length === 0) return '?'
   if (words.length === 1) return words[0].slice(0, 2).toUpperCase()
   return (words[0][0] + words[1][0]).toUpperCase()
+}
+
+/** mm:ss clock from seconds (video scrubber/labels). */
+export function clock(t: number): string {
+  if (!Number.isFinite(t) || t < 0) return '0:00'
+  const m = Math.floor(t / 60)
+  const s = Math.floor(t % 60)
+  return `${m}:${s.toString().padStart(2, '0')}`
+}
+
+/** True only for http(s) URLs — guards user/admin-entered links rendered into href. */
+export function isHttpUrl(u: string | null | undefined): boolean {
+  return !!u && /^https?:\/\//i.test(u)
 }

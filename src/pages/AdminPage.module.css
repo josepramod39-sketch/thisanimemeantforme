@@ -140,3 +140,19 @@
   border: 1px solid #f0c2bd; border-radius: var(--radius-pill); padding: 7px 14px;
 }
 .del:hover { background: #c0392b; color: #fff; border-color: #c0392b; }
+
+@media (max-width: 560px) {
+  .page { padding: 24px 16px 64px; }
+  .topbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .section { padding: 18px; }
+  .addClip { flex-direction: column; align-items: stretch; }
+  .draft { flex-direction: column; }
+  .draftThumb { width: 100%; }
+  .draftFields { width: 100%; }
+  .clipRow { flex-wrap: wrap; }
+  .clipThumb { width: 64px; }
+  .storyRow { flex-direction: column; align-items: stretch; }
+  .del { align-self: flex-start; }
+  .addMood { flex-direction: column; align-items: stretch; }
+  .inputSm { width: 100%; }
+}

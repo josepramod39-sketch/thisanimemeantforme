@@ -205,9 +205,9 @@
 .ctrl {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   color: #5a4f3b;
   transition: background 0.15s, color 0.15s, transform 0.1s;
 }
@@ -217,12 +217,12 @@
 .ctrl svg { width: 16px; height: 16px; }
 
 .play {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   background: linear-gradient(180deg, #fff, #e7dcc2);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
 }
-.play svg { width: 15px; height: 15px; }
+.play svg { width: 16px; height: 16px; }
 
 .track {
   position: relative;
@@ -291,7 +291,16 @@
 
 @media (max-width: 520px) {
   .tv { padding: 10px; border-radius: 20px; }
-  .controls { gap: 5px; padding: 7px 9px; }
+  .controls { gap: 5px; padding: 7px 8px; }
   .kind { display: none; }
   .time { min-width: 26px; font-size: 0.66rem; }
+}
+
+/* Keep the control bar from overflowing on the narrowest phones. */
+@media (max-width: 380px) {
+  .controls { gap: 3px; padding: 6px; }
+  .ctrl { width: 30px; height: 30px; }
+  .play { width: 34px; height: 34px; }
+  .time { min-width: 24px; font-size: 0.62rem; }
+  .track { margin: 0 2px; }
 }

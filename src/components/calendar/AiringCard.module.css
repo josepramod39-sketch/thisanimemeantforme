@@ -42,6 +42,7 @@
 }
 
 .card:hover .play { opacity: 1; }
+@media (hover: none) { .play { opacity: 0.85; } }
 .play svg { width: 30px; height: 30px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); }
 
 .countdown {

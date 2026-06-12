@@ -8,6 +8,11 @@
   text-align: center;
 }
 
+/* Don't force a full-height hero on short/landscape viewports. */
+@media (max-height: 600px) {
+  .hero { min-height: auto; padding: 48px 0 56px; }
+}
+
 .scrollCue {
   position: absolute;
   bottom: 22px;

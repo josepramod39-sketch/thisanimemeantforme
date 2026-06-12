@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom'
 import type { ClipRecord, Mood, SiteSettings, Story } from '../lib/types'
 import {
   fetchStories, adminDeleteStory, listMoods, upsertMood, deleteMood, updateSettings,
-  adminListClips, addClip, updateClip, deleteClip, fetchYtMeta, extractYouTubeId,
+  adminListClips, addClip, updateClip, deleteClip, fetchYtMeta,
 } from '../lib/db'
+import { extractYouTubeId } from '../lib/video'
 import { invalidateMoods } from '../hooks/useMoods'
 import { invalidateClips } from '../hooks/useClips'
 import { useSession } from '../context/session'
 import { useSettings } from '../context/settings'
-import { timeAgo } from '../lib/format'
+import { timeAgo, isHttpUrl } from '../lib/format'
 import PillButton from '../components/PillButton'
 import { ADMIN_EMAILS } from '../lib/supabase'
 import styles from './AdminPage.module.css'
@@ -181,7 +182,8 @@ function ClipsSection() {
     try {
       const meta = await fetchYtMeta(url)
       setDraft({ id, kind: 'official', title: meta.title, channel: meta.channel,
-        channelUrl: meta.channelUrl, thumbnail: meta.thumbnail || ytThumb(id), sort: 999, enabled: true })
+        channelUrl: isHttpUrl(meta.channelUrl) ? meta.channelUrl : `https://www.youtube.com/watch?v=${id}`,
+        thumbnail: meta.thumbnail || ytThumb(id), sort: 999, enabled: true })
     } catch {
       setDraft({ id, kind: 'official', title: '', channel: '',
         channelUrl: `https://www.youtube.com/watch?v=${id}`, thumbnail: ytThumb(id), sort: 999, enabled: true })
@@ -194,6 +196,7 @@ function ClipsSection() {
   const add = async () => {
     if (!draft) return
     if (!draft.title.trim() || !draft.channel.trim()) { setErr('Title and channel are required.'); return }
+    if (draft.channelUrl && !isHttpUrl(draft.channelUrl)) { setErr('Channel link must start with https://'); return }
     setBusy(true); setErr(null)
     try {
       await addClip(draft)
@@ -236,7 +239,7 @@ function ClipsSection() {
 
       {draft && (
         <div className={styles.draft}>
-          {draft.thumbnail && <img className={styles.draftThumb} src={draft.thumbnail} alt="" />}
+          {draft.thumbnail && <img className={styles.draftThumb} src={draft.thumbnail} alt={draft.title || 'Video thumbnail'} />}
           <div className={styles.draftFields}>
             <input className={styles.inputSm} placeholder="Title"
               value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
@@ -256,7 +259,7 @@ function ClipsSection() {
       <div className={styles.clipList}>
         {clips.map((c) => (
           <div key={c.id} className={`${styles.clipRow} ${c.enabled ? '' : styles.clipOff}`}>
-            {c.thumbnail && <img className={styles.clipThumb} src={c.thumbnail} alt="" />}
+            {c.thumbnail && <img className={styles.clipThumb} src={c.thumbnail} alt={c.title} />}
             <div className={styles.clipMeta}>
               <span className={styles.clipTitle}>{c.title}</span>
               <span className={styles.clipSub}>{c.channel} · {c.kind === 'amv' ? 'AMV' : 'Official'}</span>

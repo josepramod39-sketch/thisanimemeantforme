@@ -78,13 +78,14 @@ export function useYouTubePlayer(initialId: string, opts: Options = {}): YouTube
 
   useEffect(() => {
     let cancelled = false
+    let player: YTPlayer | null = null
     const container = containerRef.current
     const host = document.createElement('div')
     container?.appendChild(host)
 
     loadApi().then((YT) => {
       if (cancelled) return
-      playerRef.current = new YT.Player(host, {
+      player = new YT.Player(host, {
         videoId: initialId,
         playerVars: {
           autoplay: 1, mute: 1, controls: 0, rel: 0, modestbranding: 1,
@@ -104,12 +105,15 @@ export function useYouTubePlayer(initialId: string, opts: Options = {}): YouTube
           onError: () => optsRef.current.onError?.(),
         },
       })
+      playerRef.current = player
     })
 
     return () => {
       cancelled = true
-      playerRef.current?.destroy()
-      playerRef.current = null
+      // Destroy the instance this effect created; only clear the shared ref
+      // if it still points at our player (StrictMode remount-safe).
+      player?.destroy()
+      if (playerRef.current === player) playerRef.current = null
       if (container) container.innerHTML = ''
       setReady(false)
     }
@@ -157,7 +161,10 @@ export function useYouTubePlayer(initialId: string, opts: Options = {}): YouTube
 
   const load = useCallback((id: string) => {
     playerRef.current?.loadVideoById(id)
+    // Reset so the scrubber/label don't briefly show the previous clip's length;
+    // the poll repopulates duration once getDuration() > 0 for the new video.
     setCurrent(0)
+    setDuration(0)
   }, [])
 
   return { containerRef, ready, playing, current, duration, muted, toggle, seek, skip, toggleMute, load }

@@ -270,18 +270,14 @@ export async function fetchYtMeta(
   url: string,
 ): Promise<{ title: string; channel: string; channelUrl: string; thumbnail: string }> {
   const { data, error } = await supabase.functions.invoke('yt-oembed', { body: { url } })
-  if (error) throw new Error(error.message)
-  if (!data || data.error) throw new Error(data?.error || 'Could not fetch video info.')
+  // Map raw edge-function/network errors to one friendly message; the only
+  // actionable case for the admin is "this video can't be used".
+  if (error || !data || data.error) {
+    throw new Error('Could not fetch video info — the video may be private, removed, or have embedding disabled.')
+  }
   return data
 }
 
-/** Pull the 11-char video id out of a YouTube URL (or accept a bare id). */
-export function extractYouTubeId(input: string): string | null {
-  const s = input.trim()
-  if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s
-  const m = s.match(/(?:v=|\/embed\/|youtu\.be\/|\/shorts\/)([A-Za-z0-9_-]{11})/)
-  return m ? m[1] : null
-}
 
 export async function setLike(storyId: string, userId: string, liked: boolean): Promise<void> {
   if (liked) {

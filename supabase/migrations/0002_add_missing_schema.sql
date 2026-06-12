@@ -22,7 +22,8 @@ create table public.clips (
 );
 alter table public.clips enable row level security;
 create policy "clips_select_all" on public.clips for select using (true);
--- Admin-only modification is handled by RLS defaults for authenticated users without policies
+-- NOTE: with RLS enabled and no write policy, writes are denied for everyone.
+-- Admin write access + the enabled-only public read are added in 0003_admin_rls.sql.
 
 -- SITE SETTINGS
 create table public.site_settings (

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, useCallback, type React
 import type { Story } from '../lib/types'
 import type { StoryDraft } from '../components/AddStoryModal'
 import { fetchStories, insertStory, setLike } from '../lib/db'
+import { applyLikeToggle, restoreStory } from '../lib/likes'
 import { useSession } from './session'
 
 interface StoriesState {
@@ -56,23 +57,19 @@ export function StoriesProvider({ children }: { children: ReactNode }) {
 
   const toggleLike = (id: string) => {
     if (!userId) return
-    let nextLiked = false
-    setStories((prev) =>
-      prev.map((s) => {
-        if (s.id !== id) return s
-        nextLiked = !s.likedByMe
-        return { ...s, likedByMe: nextLiked, likeCount: s.likeCount + (nextLiked ? 1 : -1) }
-      }),
-    )
-    // Persist; on failure, roll the optimistic change back.
-    setLike(id, userId, nextLiked).catch(() => {
-      setStories((prev) =>
-        prev.map((s) =>
-          s.id === id
-            ? { ...s, likedByMe: !nextLiked, likeCount: s.likeCount + (nextLiked ? -1 : 1) }
-            : s,
-        ),
-      )
+    let liked = false
+    let snapshot: Story | undefined
+    setStories((prev) => {
+      snapshot = prev.find((s) => s.id === id) // exact pre-change state
+      const res = applyLikeToggle(prev, id)
+      liked = res.liked
+      return res.stories
+    })
+    if (!snapshot) return
+    const snap = snapshot
+    // Persist; on failure, restore the exact snapshot (no arithmetic drift on rapid taps).
+    setLike(id, userId, liked).catch(() => {
+      setStories((prev) => restoreStory(prev, snap))
     })
   }
 

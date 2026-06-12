@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Full-bleed cream field (maskable-safe); OS rounds the corners -->
+  <rect width="512" height="512" fill="#fdf8e7"/>
+  <!-- Retro-wireframe mark centered within the safe zone -->
+  <g transform="translate(96,123) scale(3.2)" fill="none" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="40" y1="25" x2="22" y2="8" />
+    <line x1="60" y1="25" x2="78" y2="8" />
+    <circle cx="22" cy="8" r="3.5" fill="#1a1a1a" stroke="none" />
+    <circle cx="78" cy="8" r="3.5" fill="#1a1a1a" stroke="none" />
+    <rect x="15" y="25" width="70" height="50" rx="8" />
+    <rect x="22" y="32" width="44" height="36" rx="6" />
+    <polygon points="38,40 38,60 52,50" fill="#1a1a1a" stroke-width="2" />
+    <circle cx="75" cy="40" r="4.5" fill="#e5337e" stroke="none" />
+    <circle cx="75" cy="50" r="3.5" fill="#1a1a1a" stroke="none" />
+    <circle cx="75" cy="60" r="3.5" fill="#1a1a1a" stroke="none" />
+  </g>
+</svg>

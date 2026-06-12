@@ -13,11 +13,18 @@ interface MediaNode {
   trailer?: { id: string; site: string; thumbnail?: string | null } | null
 }
 
-const cache = new Map<string, unknown>()
+// Bounded, time-limited cache. Keeps the debounced search box from growing the
+// map unboundedly, and lets airing data go stale within a session.
+interface CacheEntry { data: unknown; expires: number }
+const cache = new Map<string, CacheEntry>()
+const MAX_ENTRIES = 100
+const DEFAULT_TTL = 30 * 60_000 // 30 min
 
-async function gql<T>(query: string, variables: Record<string, unknown>): Promise<T> {
+async function gql<T>(query: string, variables: Record<string, unknown>, ttlMs = DEFAULT_TTL): Promise<T> {
   const key = query + JSON.stringify(variables)
-  if (cache.has(key)) return cache.get(key) as T
+  const hit = cache.get(key)
+  if (hit && hit.expires > Date.now()) return hit.data as T
+  if (hit) cache.delete(key)
 
   const res = await fetch(ENDPOINT, {
     method: 'POST',
@@ -31,7 +38,11 @@ async function gql<T>(query: string, variables: Record<string, unknown>): Promis
   if (json.errors) {
     throw new Error(json.errors[0]?.message ?? 'AniList query failed')
   }
-  cache.set(key, json.data)
+  if (cache.size >= MAX_ENTRIES) {
+    const oldest = cache.keys().next().value
+    if (oldest !== undefined) cache.delete(oldest)
+  }
+  cache.set(key, { data: json.data, expires: Date.now() + ttlMs })
   return json.data as T
 }
 
@@ -97,7 +108,7 @@ export async function upcomingSchedule(fromSecs: number, toSecs: number): Promis
   for (let page = 1; page <= 3; page++) {
     const data = await gql<{
       Page: { pageInfo: { hasNextPage: boolean }; airingSchedules: Array<{ id: number; episode: number; airingAt: number; media: MediaNode & { isAdult?: boolean } }> }
-    }>(SCHEDULE_QUERY, { from: fromSecs, to: toSecs, page })
+    }>(SCHEDULE_QUERY, { from: fromSecs, to: toSecs, page }, 5 * 60_000) // 5-min TTL: airing times shift
     for (const s of data.Page.airingSchedules) {
       if (s.media?.isAdult) continue
       entries.push({ id: s.id, episode: s.episode, airingAt: s.airingAt, anime: toAnimeRef(s.media) })

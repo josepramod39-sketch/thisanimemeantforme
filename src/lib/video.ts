@@ -21,3 +21,11 @@ export function youtubeEmbedUrl(id: string): string {
 export function youtubeWatchUrl(id: string): string {
   return `https://www.youtube.com/watch?v=${id}`
 }
+
+/** Pull the 11-char video id out of a YouTube URL (or accept a bare id). */
+export function extractYouTubeId(input: string): string | null {
+  const s = input.trim()
+  if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s
+  const m = s.match(/(?:v=|\/embed\/|youtu\.be\/|\/shorts\/)([A-Za-z0-9_-]{11})/)
+  return m ? m[1] : null
+}

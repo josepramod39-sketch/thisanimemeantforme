@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import type { ClipRecord } from '../../lib/types'
 import { youtubeWatchUrl } from '../../lib/video'
+import { clock, isHttpUrl } from '../../lib/format'
 import { useClips } from '../../hooks/useClips'
 import { useYouTubePlayer } from '../../hooks/useYouTubePlayer'
 import PillButton from '../PillButton'
@@ -16,13 +17,6 @@ const randomIndex = (len: number, exclude = -1) => {
   let i = exclude
   while (i === exclude) i = Math.floor(Math.random() * len)
   return i
-}
-
-function fmt(t: number): string {
-  if (!Number.isFinite(t) || t < 0) return '0:00'
-  const m = Math.floor(t / 60)
-  const s = Math.floor(t % 60)
-  return `${m}:${s.toString().padStart(2, '0')}`
 }
 
 export default function ClipTheater() {
@@ -67,15 +61,22 @@ function Theater({ clips }: { clips: ClipRecord[] }) {
     seek(frac * duration)
   }
 
+  const [isFs, setIsFs] = useState(false)
+  useEffect(() => {
+    const onFs = () => setIsFs(document.fullscreenElement === screenRef.current)
+    document.addEventListener('fullscreenchange', onFs)
+    return () => document.removeEventListener('fullscreenchange', onFs)
+  }, [])
+
   const toggleFullscreen = () => {
     const el = screenRef.current
     if (!el) return
-    if (document.fullscreenElement) document.exitFullscreen()
-    else el.requestFullscreen?.()
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {})
+    else el.requestFullscreen?.().catch(() => {})
   }
 
   const progress = duration ? (current / duration) * 100 : 0
-  const channelHref = clip.channelUrl ?? youtubeWatchUrl(clip.id)
+  const channelHref = isHttpUrl(clip.channelUrl) ? clip.channelUrl! : youtubeWatchUrl(clip.id)
 
   return (
     <section className={styles.theater}>
@@ -118,7 +119,7 @@ function Theater({ clips }: { clips: ClipRecord[] }) {
 
             {/* Functional vintage control bar */}
             <div className={styles.controls}>
-              <span className={styles.time}>{fmt(current)}</span>
+              <span className={styles.time}>{clock(current)}</span>
               <button className={styles.ctrl} onClick={() => skip(-10)} aria-label="Back 10 seconds">
                 <SkipBackIcon />
               </button>
@@ -136,6 +137,7 @@ function Theater({ clips }: { clips: ClipRecord[] }) {
                 aria-valuemin={0}
                 aria-valuemax={Math.round(duration)}
                 aria-valuenow={Math.round(current)}
+                aria-valuetext={clock(current)}
                 tabIndex={0}
                 onPointerDown={(e) => {
                   draggingRef.current = true
@@ -146,17 +148,19 @@ function Theater({ clips }: { clips: ClipRecord[] }) {
                 onPointerUp={() => { draggingRef.current = false }}
                 onKeyDown={(e) => {
                   if (e.key === 'ArrowLeft') skip(-5)
-                  if (e.key === 'ArrowRight') skip(5)
+                  else if (e.key === 'ArrowRight') skip(5)
+                  else if (e.key === 'Home') seek(0)
+                  else if (e.key === 'End' && duration) seek(duration)
                 }}
               >
                 <span className={styles.fill} style={{ width: `${progress}%` }} />
                 <span className={styles.knob} style={{ left: `${progress}%` }} />
               </div>
-              <span className={styles.time}>{fmt(duration)}</span>
+              <span className={styles.time}>{clock(duration)}</span>
               <button className={styles.ctrl} onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}>
                 {muted ? <MuteIcon /> : <VolumeIcon />}
               </button>
-              <button className={styles.ctrl} onClick={toggleFullscreen} aria-label="Fullscreen">
+              <button className={styles.ctrl} onClick={toggleFullscreen} aria-label={isFs ? 'Exit fullscreen' : 'Fullscreen'}>
                 <FullscreenIcon />
               </button>
             </div>
