@@ -5,7 +5,7 @@ import { getSettings } from '../lib/db'
 const DEFAULTS: SiteSettings = {
   brandTitle: 'animefor',
   heroKicker: 'a quiet wall for loud feelings',
-  heroPrompt: 'What did this anime mean to you?',
+  heroPrompt: 'What did this anime help you escape?',
 }
 
 interface SettingsState {
