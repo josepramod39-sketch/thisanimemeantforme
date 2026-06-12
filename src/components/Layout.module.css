@@ -109,10 +109,26 @@
 
 .footer .container {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 8px;
 }
+
+.footTagline {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text);
+}
+
+.footQ {
+  color: var(--text-muted);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.footCredit { color: var(--text-faint); }
 
 .footMeta { color: var(--text-faint); }
 

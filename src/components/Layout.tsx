@@ -54,7 +54,11 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <footer className={styles.footer}>
         <div className="container">
-          <span>
+          <p className={styles.footTagline}>
+            <BrandMark title={brand} />
+            <span className={styles.footQ}> — What did this anime help you escape?</span>
+          </p>
+          <p className={styles.footCredit}>
             Inspired by{' '}
             <a href="https://www.watchsomethingwonderful.com/" target="_blank" rel="noopener noreferrer" className={styles.footLink}>
               Watch Something Wonderful
@@ -63,14 +67,14 @@ export default function Layout({ children }: { children: ReactNode }) {
             <a href="https://www.thissongmeant.me/" target="_blank" rel="noopener noreferrer" className={styles.footLink}>
               ThisSongMeant
             </a>
-          </span>
-          <span className={styles.footMeta}>
+          </p>
+          <p className={styles.footCredit}>
             Thanks to{' '}
             <a href="https://x.com/akhil_bvs?s=20" target="_blank" rel="noopener noreferrer" className={styles.footLink}>
               @akhil_bvs
             </a>{' '}
             for helping · Anime data by AniList · Clips via YouTube
-          </span>
+          </p>
         </div>
       </footer>
     </>
