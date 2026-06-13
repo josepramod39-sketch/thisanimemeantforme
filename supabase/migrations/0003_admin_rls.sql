@@ -2,8 +2,11 @@
 -- enabled-only public clips, and the default mood phases.
 
 -- Admin helper: true only for the site owners' emails (magic-link JWT).
+-- search_path is pinned so the function can't be hijacked via a rogue schema.
 create or replace function public.is_admin() returns boolean
-language sql stable as $$
+language sql stable
+set search_path = ''
+as $$
   select coalesce(
     (auth.jwt() ->> 'email') in ('josepramod39@gmail.com', 'krishnaprateek428@gmail.com'),
     false
